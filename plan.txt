@@ -35,3 +35,6 @@ using keywords we can create an intelligible response
 
 Printing:
 just concatenate the strings if we need to and print it, maybe select a unique question for next time
+
+
+https://docs.google.com/document/d/1njYIy78JJbtl1tapQrwBNdX1DI-N572HCqlFjBQrFIs/edit?usp=sharing

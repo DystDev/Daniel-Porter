@@ -5,11 +5,14 @@
 # ---------------------------------------------------------------
 
 # TODO:
-# - Fix iden.py formatting
-# - Add questions to be posed to user
+# - Alex because i have no idea abt the topic can u make it replace ' ,' with
+# ',' in getFromWiki?
 # - Add questions posed if the bot cannot understand
 # - Add user info handling (i.e. can unshift name to start?)
-
+# - Add 'question' question type
+# - The wiki finder sometimes returns a "may refer to", turn this into an error message
+# DONE - Fix iden.py formatting
+# DONE - Add questions to be posed to user
 
 
 # Imports
@@ -17,26 +20,20 @@ import iden # Identity
 import phrases # Set phrases
 import random # Add variation to the bot
 from enum import Enum # Custom query types
-import requests # For API calls
 import time # For waiting a bit -> more natural
 import wikipediaapi # An API for wikipedia (surprisingly)
+import re # Regex for funky string manipulation
 # Lists
 punctuation = ["?",".",","]
 queryIdentity = ['you', 'your']
-queryWeb = ['what is a', 'what is an', 'search up', 'define', 'what is the meaning of']
 queryOpinion = ['do you']
-queryPerson = ['who is', 'whos', "who's"]
-
-# TODO:
-# - Add 'question' question type
-# - Add 'person' question type
+queryWiki = ['who is', 'whos', "who's", 'what is a', 'what is an', 'search up', 'define', 'what is the meaning of']
 
 # Query types enum
 class qTypes(Enum):
   IDENTITY = 'IDENTITY'
-  WEB = 'WEB'
   OPINION = 'OPINION'
-  PERSON = 'PERSON'
+  WIKI = 'WIKI'
 
 # API Calls
 dictEndpoint = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
@@ -72,15 +69,14 @@ class Bot: # The main bot class
   # 
   # PARAMS: Prompt: Used for the prompt used for the input.
   def getQueryType(self):
-    self.findSignifierFromArray(queryIdentity, True, qTypes.IDENTITY)
-    self.findSignifierFromArray(queryWeb, False, qTypes.WEB)
-    self.findSignifierFromArray(queryPerson, False, qTypes.PERSON)
+    self.findSignifierFromArray(queryIdentity, qTypes.IDENTITY)
+    self.findSignifierFromArray(queryWiki, qTypes.WIKI)
     # If the bot cannot find something to talk about, sends a random 
     # misunderstand message and TODO poses question to user
     last = self.usrMsgFormat[len(self.usrMsgFormat) -1]
     # If the topic has not been found, or the last word of the question
     # is the keyword, then find more broad topic.
-    if self.queryType == None or last == self.usedKeyword: 
+    if self.queryType == None or last == self.lastKeyword: 
       self.backupFindTopic()
     if self.queryType == None:
       self.error()
@@ -104,67 +100,104 @@ class Bot: # The main bot class
     return ans.lower().split(' ')
 
   def composeResponse(self):
+    ''' DEPRECATED
     if self.queryType == qTypes.WEB:
       # print('web qeustion')
       if self.query == '': 
-        self.query = self.obtainQuery(True, 1)
+        self.query = self.obtainQuery(-1, 1)
       if self.query == None:
         self.error()
         return
-      self.getDefinition(self.query)
-    if self.queryType == qTypes.PERSON: # TODO - actually make this work rowan
+      print(self.naturalSpeechComposer(phrases.definitionTemplates, self.getFromWiki(self.query)))
+    if self.queryType == qTypes.PERSON:
       # print('person qeustion')
       if self.query == '':
-        self.query = self.obtainQuery(True, 1)
+        self.query = self.obtainQuery(-1, 1)
       if self.query == None:
         self.error()
         return
+      print(self.naturalSpeechComposer(phrases.personTemplates, self.getFromWiki(self.query)))'''
+    if self.queryType == qTypes.WIKI:
+      # print('wik qeustion')
+      if self.query == '':
+        self.query = self.obtainQuery(-1, 1)
+      if self.query == None:
+        self.error()
+        return
+      queryGotten = self.getFromWiki(self.query)
+      if queryGotten == None:
+        print(self.naturalSpeechComposer(phrases.unknownDictionaryTemplates, self.query))
+      else:
+        print(self.naturalSpeechComposer(phrases.wikiTemplates, queryGotten))
     if self.queryType == qTypes.IDENTITY:
       # print('identiyy question')
       if self.query == '': 
-        self.query = self.obtainQuery(False, 1)
+        self.query = self.obtainQuery(1, 1)
       if self.query == None or self.query not in iden.topics: # If the feature requested not in identity
         self.error()
         return
       self.queryIdentity()
 
-  def findSignifierFromArray(self, arrayOfSignifier, usesFormatted, targetQueryType):
+  def findSignifierFromArray(self, arrayOfSignifier, targetQueryType):
     # Checks if query signifiers are in the user input
     for phrase in arrayOfSignifier:
-      if usesFormatted:
-        if phrase in self.usrMsgFormat:
-          # Saves query type (enum) and the used keyword for future use
-          self.queryType = targetQueryType
-          self.usedKeyword = phrase
-      else:
-        if phrase in self.usrMsg:
-          self.queryType = targetQueryType
-          self.usedKeyword = phrase
+      phraseSplit = phrase.split(' ')
+      if ' '.join(phraseSplit) in self.usrMsg:
+        # Saves query type (enum) and the used keyword for future use
+        self.queryType = targetQueryType
+        self.lastKeyword = phraseSplit[len(phraseSplit) - 1]
   
-  def obtainQuery(self, wasPhrase, futureIndex):
-    usedKeyword = self.usedKeyword
-    if wasPhrase:
-      splitUserKeyword = usedKeyword.split(' ')
-      usedKeyword = splitUserKeyword[len(splitUserKeyword) - 1]
-    qArr = self.usrMsg.split(' ')
-    try:
-      query = qArr[qArr.index(usedKeyword) + futureIndex]
-    except:
-      return
-    return query
+  def obtainQuery(self, dataNumberRequired, offset):
+    usedKeyword = self.lastKeyword
+    qArr = self.usrMsgFormat
+    if dataNumberRequired == 1:
+      try:
+        query = qArr[qArr.index(usedKeyword) + offset]
+      except:
+        return
+      return query
+    elif dataNumberRequired == -1:
+      try:
+        queryList = qArr[qArr.index(usedKeyword)+1:]
+        query = " ".join(queryList)
+      except:
+        return
+      return query
+    else:
+      queryData = []
+      try:
+        for i in range(0, dataNumberRequired):
+          queryData.append(qArr[qArr.index(usedKeyword) + offset + dataNumberRequired])
+      except:
+        return
+      return queryData
 
-  def getDefinition(self, query):
-    response = requests.get(dictEndpoint + query)
-    definition = response.json()
-    try:
-      definitionString = definition[0]['meanings'][0]['definitions'][0]['definition']
-    except:
-      print(self.naturalSpeechComposer(phrases.unknownDictionaryTemplates, query))
-      return
-    definitionString = definitionString[:-1] # Removes full stop
-    definitionString = definitionString[:1].lower() + definitionString[1:] # Makes first letter lowercase
-    print(self.naturalSpeechComposer(phrases.definitionTemplates, definitionString))
+  # DEPRECATED
+  # def getDefinition(self, query):
+  #   response = requests.get(dictEndpoint + query)
+  #   definition = response.json()
+  #   try:
+  #     definitionString = definition[0]['meanings'][0]['definitions'][0]['definition']
+  #   except:
+  #     print(self.naturalSpeechComposer(phrases.unknownDictionaryTemplates, query))
+  #     return
+  #   definitionString = definitionString[:-1] # Removes full stop
+  #   definitionString = definitionString[:1].lower() + definitionString[1:] # Makes first letter lowercase
+  #   print(self.naturalSpeechComposer(phrases.definitionTemplates, definitionString))
 
+  def getFromWiki(self, query):
+    page = wikiAPI.page(query)
+    pageData = page.summary
+    pageData = pageData.split(".")[0]
+    # It's regex time lets go
+    pageData = re.sub(r"\(|\)", "", re.sub(r"\(.*?\)", "", pageData)) # Obliterates bracket phrases
+    pageData = re.sub(r" ,", ",", pageData) # Annihilates " ," generated by bracket phrases
+    pageData = re.sub(r"  ", " ", pageData)
+    pageData = re.sub(r" ,", ",", pageData)# Annihiltes thingy again (cause yeh)
+    if pageData == "" or pageData == None:
+      pageData = None
+    return pageData
+# alex What r u gonna call the method/qtype for both of them in one uh idk what hapening imma see if this work k rly we dont need the dictionarr anm or qType.PERSON mby just use qType.DEFINITION and sub in getFromWiki^^
   # Will choose a template from an array provided in param, and insert content
   # into it
   def naturalSpeechComposer(self, templates, content = None):
@@ -222,7 +255,7 @@ class Bot: # The main bot class
     
   def reset(self):
     # All examples after the question 'What is an apple?'
-    self.usedKeyword = '' # e.g. 'what is an'
+    self.lastKeyword = '' # e.g. 'what is an'
     self.usrMsg = '' # e.g. 'what is an apple'
     self.usrMsgFormat = '' # e.g. ['what', 'is', 'an', 'apple']
     self.queryType = None # e.g qTypes.WEB

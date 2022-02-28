@@ -16,7 +16,7 @@ iden = {
   },
   ('like', 'hobbies', 'hobby'):{
     'responses':['I like to CONTENT', 'In the weekends I ususally CONTENT'],
-    'value':'ride bikes and do programming' # tu doit utiliser la forme infinitif ici
+    'value':'ride bikes and do programming'
   },
   ('how'):{
     'responses':['I\'m alright thanks', 'Not bad today.', 'Same as always, fine fine'],
