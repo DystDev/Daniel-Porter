@@ -237,6 +237,6 @@ class Bot: # The main bot class
 
 # Main program
 dan = Bot() # Instance of the bot
-dan.reset()
+dan.reset() # reset i.e. init most fields
 while True:
   dan.handleConversation()
