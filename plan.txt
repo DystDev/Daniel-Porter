@@ -1,0 +1,37 @@
+Need to lowercase, remove questionmark
+
+Prompts: 'do you' followed by verb, 'are you' followed by adj., 'your' followed by noun
+
+Split after you or your?
+
+i.e. what is your name? -> ['what is your', 'name']
+
+
+1. Split into words ['what', 'is', 'your', 'name']
+2. Find index of prompt
+3. Find next one and work w/ that?
+
+Synonyms???????
+
+dict called identity = {'name': 'MOgu', 'age': 134, 'job':}
+
+handling 'and'
+
+Different sections:
+splitting up input
+understanding keywords
+selecting responses
+printing them
+
+
+Splitting Input:
+should be simple, just take an input and split it into words
+
+Understanding Keywords:
+we need like alist of keywords and what they mnean i guess
+
+Responses:
+using keywords we can create an intelligible response
+
+Printing:
+just concatenate the strings if we need to and print it, maybe select a unique question for next time
