@@ -19,12 +19,13 @@ import random # Add variation to the bot
 from enum import Enum # Custom query types
 import requests # For API calls
 import time # For waiting a bit -> more natural
+import wikipediaapi # An API for wikipedia (surprisingly)
 # Lists
 punctuation = ["?",".",","]
 queryIdentity = ['you', 'your']
 queryWeb = ['what is a', 'what is an', 'search up', 'define', 'what is the meaning of']
-queryQuestion = ['do you']
-queryPerson = ['who is']
+queryOpinion = ['do you']
+queryPerson = ['who is', 'whos', "who's"]
 
 # TODO:
 # - Add 'question' question type
@@ -34,22 +35,29 @@ queryPerson = ['who is']
 class qTypes(Enum):
   IDENTITY = 'IDENTITY'
   WEB = 'WEB'
-  
+  OPINION = 'OPINION'
+  PERSON = 'PERSON'
 
 # API Calls
 dictEndpoint = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
+wikiAPI = wikipediaapi.Wikipedia('en')
 
 
 
 class Bot: # The main bot class
   def __init__(self): # Constructor
     pass
-        
-  def handleConversation(self): # Main method
+
+  # Main method. Goes through steps of handling conversation.
+  # PARAMS: N/A
+  def handleConversation(self): 
     self.askQuestion()
     self.getQueryType()
     self.composeResponse()
 
+  # Poses question to user (complicated way of calling input()). If question
+  # is the first asked, resets the bots and sets the local fields
+  # PARAMS: Prompt: Used for the prompt used for the input.
   def askQuestion(self, prompt="What is your question? "): 
     # Resets fields for each new question
     ans = input(prompt)
@@ -60,10 +68,13 @@ class Bot: # The main bot class
       self.usrMsg = self.formatAnswer(ans)
       self.usrMsgFormat = self.formatAnswerArray(ans)
     return ans
-  
+
+  # 
+  # PARAMS: Prompt: Used for the prompt used for the input.
   def getQueryType(self):
     self.findSignifierFromArray(queryIdentity, True, qTypes.IDENTITY)
     self.findSignifierFromArray(queryWeb, False, qTypes.WEB)
+    self.findSignifierFromArray(queryPerson, False, qTypes.PERSON)
     # If the bot cannot find something to talk about, sends a random 
     # misunderstand message and TODO poses question to user
     last = self.usrMsgFormat[len(self.usrMsgFormat) -1]
@@ -101,6 +112,13 @@ class Bot: # The main bot class
         self.error()
         return
       self.getDefinition(self.query)
+    if self.queryType == qTypes.PERSON: # TODO - actually make this work rowan
+      # print('person qeustion')
+      if self.query == '':
+        self.query = self.obtainQuery(True, 1)
+      if self.query == None:
+        self.error()
+        return
     if self.queryType == qTypes.IDENTITY:
       # print('identiyy question')
       if self.query == '': 
@@ -126,8 +144,8 @@ class Bot: # The main bot class
   def obtainQuery(self, wasPhrase, futureIndex):
     usedKeyword = self.usedKeyword
     if wasPhrase:
-      spltusrkw = usedKeyword.split(' ')
-      usedKeyword = spltusrkw[len(spltusrkw) - 1]
+      splitUserKeyword = usedKeyword.split(' ')
+      usedKeyword = splitUserKeyword[len(splitUserKeyword) - 1]
     qArr = self.usrMsg.split(' ')
     try:
       query = qArr[qArr.index(usedKeyword) + futureIndex]
@@ -203,12 +221,13 @@ class Bot: # The main bot class
       print(self.naturalSpeechComposer(cbRec, usrResponse))
     
   def reset(self):
-    self.usedKeyword = ''
-    self.usrMsg = ''
-    self.usrMsgFormat = ''
-    self.queryType = None
-    self.query = ''
-    self.isNewQuestion = True
+    # All examples after the question 'What is an apple?'
+    self.usedKeyword = '' # e.g. 'what is an'
+    self.usrMsg = '' # e.g. 'what is an apple'
+    self.usrMsgFormat = '' # e.g. ['what', 'is', 'an', 'apple']
+    self.queryType = None # e.g qTypes.WEB
+    self.query = '' # e.g. apple
+    self.isNewQuestion = True # e.g. wtf
     
   def error(self):
     print(random.choice(phrases.unk))
