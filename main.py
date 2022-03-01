@@ -65,7 +65,6 @@ class Bot: # The main bot class
       self.usrMsgFormat = self.formatAnswerArray(ans)
     return ans
 
-  # 
   # PARAMS: Prompt: Used for the prompt used for the input.
   def getQueryType(self):
     self.findSignifierFromArray(queryIdentity, qTypes.IDENTITY)
@@ -99,23 +98,7 @@ class Bot: # The main bot class
     return ans.lower().split(' ')
 
   def composeResponse(self):
-    ''' DEPRECATED
-    if self.queryType == qTypes.WEB:
-      # print('web qeustion')
-      if self.query == '': 
-        self.query = self.obtainQuery(-1, 1)
-      if self.query == None:
-        self.error()
-        return
-      print(self.naturalSpeechComposer(phrases.definitionTemplates, self.getFromWiki(self.query)))
-    if self.queryType == qTypes.PERSON:
-      # print('person qeustion')
-      if self.query == '':
-        self.query = self.obtainQuery(-1, 1)
-      if self.query == None:
-        self.error()
-        return
-      print(self.naturalSpeechComposer(phrases.personTemplates, self.getFromWiki(self.query)))'''
+    # REF A1 in deprecated.py
     if self.queryType == qTypes.WIKI:
       # print('wik qeustion')
       if self.query == '':
@@ -170,19 +153,8 @@ class Bot: # The main bot class
       except:
         return
       return queryData
-
-  # DEPRECATED
-  # def getDefinition(self, query):
-  #   response = requests.get(dictEndpoint + query)
-  #   definition = response.json()
-  #   try:
-  #     definitionString = definition[0]['meanings'][0]['definitions'][0]['definition']
-  #   except:
-  #     print(self.naturalSpeechComposer(phrases.unknownDictionaryTemplates, query))
-  #     return
-  #   definitionString = definitionString[:-1] # Removes full stop
-  #   definitionString = definitionString[:1].lower() + definitionString[1:] # Makes first letter lowercase
-  #   print(self.naturalSpeechComposer(phrases.definitionTemplates, definitionString))
+  # REF A2 deprecated.py
+  
 
   def getFromWiki(self, query):
     page = wikiAPI.page(query)
@@ -196,7 +168,8 @@ class Bot: # The main bot class
     if pageData == "" or pageData == None:
       pageData = None
     return pageData
-# alex What r u gonna call the method/qtype for both of them in one uh idk what hapening imma see if this work k rly we dont need the dictionarr anm or qType.PERSON mby just use qType.DEFINITION and sub in getFromWiki^^
+
+    
   # Will choose a template from an array provided in param, and insert content
   # into it
   def naturalSpeechComposer(self, templates, content = None):
