@@ -7,6 +7,9 @@ iden = {
     'callback':['What about you? ', 'What can I call you? ', 'And what\'s yours?'],
     'cbRecieved':['Nice to meet you, CONTENT']
   },
+  ('how', 'feeling'):{
+    'responses':['I am feeling quite happy today', "Good, thanks", "Same as always, fine, fine"],
+  },
   ('hi', 'hello'):{
     'responses':['Hi there!', 'Heya!', 'Hi!'],
   },
@@ -16,13 +19,7 @@ iden = {
   },
   ('like', 'hobbies', 'hobby'):{
     'responses':['I like to CONTENT', 'In the weekends I ususally CONTENT'],
-    'value':'ride bikes and do programming'
-  },
-  ('how'):{
-    'responses':['I\'m alright thanks', 'Not bad today.', 'Same as always, fine fine'],
-    'value':'Daniel',
-    'response':['What about you? ', 'What can I call you? ', 'And what\'s yours?'],
-    'callback':['Nice to meet you, CONTENT']
+    'value':"ride bikes and do programming"
   }
 }
 
