@@ -4,7 +4,7 @@
 # Alex Badman
 # ---------------------------------------------------------------
 
-# TODO:
+# TODO: fat mog
 # ',' in getFromWiki?
 # - Add questions posed if the bot cannot understand
 # - Add user info handling (i.e. can unshift name to start?)
