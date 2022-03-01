@@ -6,4 +6,3 @@ unknownDictionaryTemplates = ['I don\'t know what a CONTENT is', 'I have no idea
 
 unknownPreQuestion = ['On the other hand...', 'Let me ask you something.', 'I\'ve got a question for you']
 
-negative
