@@ -109,7 +109,6 @@ class Bot: # The main bot class
 
   
   def composeResponse(self):
-    # REF A1 in deprecated.py
     if self.queryType == qTypes.WIKI:
       # print('wik qeustion')
       if self.query == '':
@@ -176,7 +175,6 @@ class Bot: # The main bot class
       except:
         return
       return queryData
-  # REF A2 deprecated.py
   
 
   def getFromWiki(self, query):
