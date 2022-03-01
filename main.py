@@ -28,6 +28,7 @@ punctuation = ["?",".",","]
 queryIdentity = ['you', 'your']
 queryOpinionVerb = ['do you']
 queryOpinionAdj = ['are you']
+queryOpinionNoun = ['are you a']
 queryWiki = ['who is', 'whos', "who's", 'what is a', 'what is an', 'search up', 'define', 'what is the meaning of', 'who are']
 
 # Query types enum
@@ -35,6 +36,7 @@ class qTypes(Enum):
   IDENTITY = 'IDENTITY'
   OPINIONVERB = 'OPINIONVERB'
   OPINIONADJ = 'OPINIONADJ'
+  OPINIONNOUN = 'OPINIONNOUN'
   WIKI = 'WIKI'
 
 # API Calls
