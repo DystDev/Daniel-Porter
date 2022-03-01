@@ -5,7 +5,6 @@
 # ---------------------------------------------------------------
 
 # TODO:
-# - Alex because i have no idea abt the topic can u make it replace ' ,' with
 # ',' in getFromWiki?
 # - Add questions posed if the bot cannot understand
 # - Add user info handling (i.e. can unshift name to start?)
