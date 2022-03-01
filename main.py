@@ -106,6 +106,8 @@ class Bot: # The main bot class
       ans = ans[:len(ans)-1]
     return ans.lower().split(' ')
 
+
+  
   def composeResponse(self):
     # REF A1 in deprecated.py
     if self.queryType == qTypes.WIKI:
@@ -120,6 +122,7 @@ class Bot: # The main bot class
         print(self.naturalSpeechComposer(phrases.unknownDictionaryTemplates, self.query))
       else:
         print(self.naturalSpeechComposer(phrases.wikiTemplates, queryGotten))
+    
     if self.queryType == qTypes.IDENTITY:
       # print('identiyy question')
       if self.query == '': 
@@ -128,6 +131,7 @@ class Bot: # The main bot class
         self.error()
         return
       self.queryIdentity()
+    
     if self.queryType == qTypes.OPINIONADJ:
       if self.query == '':
         self.query = self.obtainQuery(1, 1)
@@ -135,8 +139,10 @@ class Bot: # The main bot class
         self.error()
         return
       self.queryOpinionAdj()
+    
     if self.queryType == qTypes.OPINIONVERB:
       pass
+  
   def findSignifierFromArray(self, arrayOfSignifier, targetQueryType):
     # Checks if query signifiers are in the user input
     for phrase in arrayOfSignifier:

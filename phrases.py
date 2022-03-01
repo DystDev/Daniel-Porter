@@ -6,6 +6,8 @@ unknownDictionaryTemplates = ['I don\'t know what a CONTENT is', 'I have no idea
 
 unknownPreQuestion = ['On the other hand...', 'Let me ask you something.', 'I\'ve got a question for you']
 
+
+# Adjective response set phrases
 negativeOpAdj = ['No, of course I\'m not CONTENT!', 'I\'m not CONTENT....', 'Umm? No - I\'m not CONTENT']
 
 noOpAdj = ['No, I\'m not CONTENT', 'Unfortunately, I\'m not CONTENT', 'Nope, not CONTENT']
@@ -15,3 +17,4 @@ neutralOpAdj = ['I\'m not really sure if I\'m CONTENT or not.', 'I could be CONT
 yesOpAdj = ['Yes, I\'m CONTENT', 'Fortunately, I\'m CONTENT', 'Yeah, I am CONTENT actually']
 
 positiveOpAdj = ['Yes, I\'m CONTENT! Thanks for asking', 'Thankfully, I\'m CONTENT!', 'Yeah, I really like being CONTENT!']
+
