@@ -6,13 +6,14 @@
 
 # TODO: fat mog
 # ',' in getFromWiki?
+# - roadmap : rework getquery
+# - roadmap : add opinionnoun and opinionverb
 # - Add questions posed if the bot cannot understand
 # - Add user info handling (i.e. can unshift name to start?)
 # - Add 'question' question type
 # - The wiki finder sometimes returns a "may refer to", turn this into an error message
 # DONE - Fix iden.py formatting
 # DONE - Add questions to be posed to user
-# TESTING FROM GHUB
 
 # Imports
 import iden # Identity
@@ -76,7 +77,7 @@ class Bot: # The main bot class
     self.findSignifierFromArray(queryWiki, qTypes.WIKI)
     self.findSignifierFromArray(queryOpinionAdj, qTypes.OPINIONADJ)
     self.findSignifierFromArray(queryOpinionVerb, qTypes.OPINIONVERB)
-    
+    self.findSignifierFromArray(queryOpinionNoun, qTypes.OPINIONNOUN)
     # If the bot cannot find something to talk about, sends a random 
     # misunderstand message and TODO poses question to user
     last = self.usrMsgFormat[len(self.usrMsgFormat) -1]
