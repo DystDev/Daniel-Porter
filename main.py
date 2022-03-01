@@ -17,6 +17,7 @@
 # Imports
 import iden # Identity
 import phrases # Set phrases
+import opinions # Opinions
 import random # Add variation to the bot
 from enum import Enum # Custom query types
 import time # For waiting a bit -> more natural
@@ -25,13 +26,15 @@ import re # Regex for funky string manipulation
 # Lists
 punctuation = ["?",".",","]
 queryIdentity = ['you', 'your']
-queryOpinion = ['do you']
-queryWiki = ['who is', 'whos', "who's", 'what is a', 'what is an', 'search up', 'define', 'what is the meaning of']
+queryOpinionVerb = ['do you']
+queryOpinionAdj = ['are you']
+queryWiki = ['who is', 'whos', "who's", 'what is a', 'what is an', 'search up', 'define', 'what is the meaning of', 'who are']
 
 # Query types enum
 class qTypes(Enum):
   IDENTITY = 'IDENTITY'
-  OPINION = 'OPINION'
+  OPINIONVERB = 'OPINIONVERB'
+  OPINIONADJ = 'OPINIONADJ'
   WIKI = 'WIKI'
 
 # API Calls
@@ -69,6 +72,9 @@ class Bot: # The main bot class
   def getQueryType(self):
     self.findSignifierFromArray(queryIdentity, qTypes.IDENTITY)
     self.findSignifierFromArray(queryWiki, qTypes.WIKI)
+    self.findSignifierFromArray(queryOpinionAdj, qTypes.OPINIONADJ)
+    self.findSignifierFromArray(queryOpinionVerb, qTypes.OPINIONVERB)
+    
     # If the bot cannot find something to talk about, sends a random 
     # misunderstand message and TODO poses question to user
     last = self.usrMsgFormat[len(self.usrMsgFormat) -1]
@@ -119,7 +125,15 @@ class Bot: # The main bot class
         self.error()
         return
       self.queryIdentity()
-
+    if self.queryType == qTypes.OPINIONADJ:
+      if self.query == '':
+        self.query = self.obtainQuery(1, 1)
+      if self.query == None:
+        self.error()
+        return
+      self.queryOpinionAdj()
+    if self.queryType == qTypes.OPINIONVERB:
+      pass
   def findSignifierFromArray(self, arrayOfSignifier, targetQueryType):
     # Checks if query signifiers are in the user input
     for phrase in arrayOfSignifier:
@@ -193,6 +207,8 @@ class Bot: # The main bot class
         self.queryType = qTypes.IDENTITY
         self.query = word
 
+  def
+  
   def queryIdentity(self):
     for tuple in iden.iden:
       for value in tuple:

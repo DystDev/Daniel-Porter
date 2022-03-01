@@ -1,5 +1,5 @@
 # REF A1
-''' DEPRECATED
+''' DECEASED
     if self.queryType == qTypes.WEB:
       # print('web qeustion')
       if self.query == '': 
@@ -18,7 +18,7 @@
       print(self.naturalSpeechComposer(phrases.personTemplates, self.getFromWiki(self.query)))'''
 
 # REF A2
-# DEPRECATED
+# DECEASED
   # def getDefinition(self, query):
   #   response = requests.get(dictEndpoint + query)
   #   definition = response.json()
