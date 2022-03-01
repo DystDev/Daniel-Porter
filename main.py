@@ -207,7 +207,19 @@ class Bot: # The main bot class
         self.queryType = qTypes.IDENTITY
         self.query = word
 
-  def
+  def queryOpinionAdj(self):
+    if self.query not in opinions.opA.keys():
+      opinions.opA[self.query] = random.randint(-2, 2)
+    if opinions.opA[self.query] == -2:
+      print('nnegattive ', self.query)
+    if opinions.opA[self.query] == -1:
+      print('doesnt do ', self.query)
+    if opinions.opA[self.query] == 0:
+      print('neutral abt ', self.query)
+    if opinions.opA[self.query] == 1:
+      print('does ', self.query)
+    if opinions.opA[self.query] == 2:
+      print('positif abt ', self.query)
   
   def queryIdentity(self):
     for tuple in iden.iden:
