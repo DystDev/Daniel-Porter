@@ -210,18 +210,19 @@ class Bot: # The main bot class
         self.query = word
 
   def queryOpinionAdj(self):
+    # this code is pretty mank
     if self.query not in opinions.opA.keys():
       opinions.opA[self.query] = random.randint(-2, 2)
     if opinions.opA[self.query] == -2:
-      print('nnegattive ', self.query)
+      self.postResponse(phrases.negativeOpAdj, self.query)
     if opinions.opA[self.query] == -1:
-      print('doesnt do ', self.query)
+      self.postResponse(phrases.noOpAdj, self.query)
     if opinions.opA[self.query] == 0:
-      print('neutral abt ', self.query)
+      self.postResponse(phrases.neutralOpAdj, self.query)
     if opinions.opA[self.query] == 1:
-      print('does ', self.query)
+      self.postResponse(phrases.yesOpAdj, self.query)
     if opinions.opA[self.query] == 2:
-      print('positif abt ', self.query)
+      self.postResponse(phrases.positiveOpAdj, self.query)
   
   def queryIdentity(self):
     for tuple in iden.iden:
