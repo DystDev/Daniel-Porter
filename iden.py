@@ -23,8 +23,4 @@ iden = {
   }
 }
 
-topics = []
-
-for topicArr in iden.keys():
-  for topic in topicArr:
-    topics.append(topic)
+topics = [item for topicArr in iden.keys() for item in topicArr]
