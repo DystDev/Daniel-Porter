@@ -7,8 +7,8 @@ unknownDictionaryTemplates = ['I don\'t know what a CONTENT is', 'I have no idea
 unknownPreQuestion = ['On the other hand...', 'Let me ask you something.', 'I\'ve got a question for you']
 
 
-# Adjective response set phrases
-adjOps = {
+# Feature response set phrases
+featureOps = {
   -2: ['No, of course I\'m not CONTENT!', 'I\'m not CONTENT....', 'Umm? No - I\'m not CONTENT'], 
   -1: ['No, I\'m not CONTENT', 'Unfortunately, I\'m not CONTENT', 'Nope, not CONTENT'], 
   0: ['I\'m not really sure if I\'m CONTENT or not.', 'I could be CONTENT, I haven\'t really thought about that though.', 'Umm, maybe? I could be CONTENT.'], 

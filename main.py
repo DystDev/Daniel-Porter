@@ -7,11 +7,12 @@
 # TODO: fat mog
 # ',' in getFromWiki?
 # - roadmap : rework getquery
-# - roadmap : add opinionnoun and opinionverb
+# - roadmap : implement opinionverb
 # - Add questions posed if the bot cannot understand
 # - Add user info handling (i.e. can unshift name to start?)
 # - Add 'question' question type
 # - The wiki finder sometimes returns a "may refer to", turn this into an error message
+# DONE - roadmap : add opinionfeature
 # DONE - Fix iden.py formatting
 # DONE - Add questions to be posed to user
 
@@ -28,16 +29,14 @@ import re # Regex for funky string manipulation
 punctuation = ["?",".",","]
 queryIdentity = ['you', 'your']
 queryOpinionVerb = ['do you']
-queryOpinionAdj = ['are you']
-queryOpinionNoun = ['are you a']
+queryOpinionFeature = ['are you a','are you', 'are you the']
 queryWiki = ['who is', 'whos', "who's", 'what is a', 'what is an', 'search up', 'define', 'what is the meaning of', 'who are']
 
 # Query types enum
 class qTypes(Enum):
   IDENTITY = 'IDENTITY'
   OPINIONVERB = 'OPINIONVERB'
-  OPINIONADJ = 'OPINIONADJ'
-  OPINIONNOUN = 'OPINIONNOUN'
+  OPINIONFEATURE = 'OPINIONFEATURE'
   WIKI = 'WIKI'
 
 # API Calls
@@ -75,9 +74,8 @@ class Bot: # The main bot class
   def getQueryType(self):
     self.findSignifierFromArray(queryIdentity, qTypes.IDENTITY)
     self.findSignifierFromArray(queryWiki, qTypes.WIKI)
-    self.findSignifierFromArray(queryOpinionAdj, qTypes.OPINIONADJ)
+    self.findSignifierFromArray(queryOpinionFeature, qTypes.OPINIONFEATURE)
     self.findSignifierFromArray(queryOpinionVerb, qTypes.OPINIONVERB)
-    self.findSignifierFromArray(queryOpinionNoun, qTypes.OPINIONNOUN)
     # If the bot cannot find something to talk about, sends a random 
     # misunderstand message and TODO poses question to user
     last = self.usrMsgFormat[len(self.usrMsgFormat) -1]
@@ -131,17 +129,17 @@ class Bot: # The main bot class
         return
       self.queryIdentity()
     
-    if self.queryType == qTypes.OPINIONADJ:
+    if self.queryType == qTypes.OPINIONFEATURE:
       if self.query == '':
-        self.query = self.obtainQuery(1, 1)
+        self.query = self.obtainQuery(-1, 1)
       if self.query == None:
         self.error()
         return
-      self.queryOpinionAdj()
+      self.queryOpinionFeature()
     
     if self.queryType == qTypes.OPINIONVERB:
       pass
-  
+      
   def findSignifierFromArray(self, arrayOfSignifier, targetQueryType):
     # Checks if query signifiers are in the user input
     for phrase in arrayOfSignifier:
@@ -214,20 +212,12 @@ class Bot: # The main bot class
         self.queryType = qTypes.IDENTITY
         self.query = word
 
-  def queryOpinionAdj(self):
+  def queryOpinionFeature(self):
     # this code is pretty mank
-    if self.query not in opinions.opA.keys():
-      opinions.opA[self.query] = random.randint(-2, 2)
-    if opinions.opA[self.query] == -2:
-      self.postResponse(phrases.negativeOpAdj, self.query)
-    if opinions.opA[self.query] == -1:
-      self.postResponse(phrases.noOpAdj, self.query)
-    if opinions.opA[self.query] == 0:
-      self.postResponse(phrases.neutralOpAdj, self.query)
-    if opinions.opA[self.query] == 1:
-      self.postResponse(phrases.yesOpAdj, self.query)
-    if opinions.opA[self.query] == 2:
-      self.postResponse(phrases.positiveOpAdj, self.query)
+    if self.query not in opinions.opF.keys():
+      opinions.opF[self.query] = random.randint(-2, 2)
+    self.postResponse(phrases.featureOps[opinions.opF[self.query]], self.query)
+
   
   def queryIdentity(self):
     for tuple in iden.iden:

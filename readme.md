@@ -9,6 +9,8 @@ Daniel Porter, our bot, will take input and respond intelligently based on your 
 
 **<span style="text-decoration:underline;">2 - Event Loop</span>**
 
+![flowchart](/flow.png)
+
 This is a flowchart showing the current event loop, including all methods of the **main Bot() class** that can be used to create instances of the bot. From there, the **handleConversation** method must be called to initiate the dialogue between the user and the bot. The main three methods are **askQuestion, getQueryType and composeResponse**, which in turn use their own methods to help out. The helpers seen at the top left are used to help format data and send similar messages to the user at various times. **NOTE: Dotted methods and lines represent functionality planned but not yet implemented.**
 
 **<span style="text-decoration:underline;">3 - Other Files</span>**
