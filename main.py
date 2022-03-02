@@ -1,4 +1,3 @@
-# Turing Test
 # List who is in the group or if you are working alone.
 # Rowan Marshall
 # Alex Badman
@@ -6,8 +5,6 @@
 
 # TODO: fat mog
 # ',' in getFromWiki?
-# - roadmap : rework getquery
-# - roadmap : implement opinionverb
 # - Add questions posed if the bot cannot understand
 # - Add user info handling (i.e. can unshift name to start?)
 # - Add 'question' question type
@@ -138,7 +135,12 @@ class Bot: # The main bot class
       self.queryOpinionFeature()
     
     if self.queryType == qTypes.OPINIONVERB:
-      pass
+      if self.query == '':
+        self.query = self.optainQuery(-2, 1)
+      if self.query == None:
+        self.error()
+        return
+      self.queryOpinionVerb()
       
   def findSignifierFromArray(self, arrayOfSignifier, targetQueryType):
     # Checks if query signifiers are in the user input
@@ -165,16 +167,14 @@ class Bot: # The main bot class
       except:
         return
       return query
-    else:
-      queryData = []
+    elif dataNumberRequired == -2: # For verb phrase
       try:
-        for i in range(0, dataNumberRequired):
-          queryData.append(qArr[qArr.index(usedKeyword) + offset + dataNumberRequired])
+        queryList = []
+        queryList.append(qArr[qArr.index(usedKeyword)+1])
+        queryList.append(qArr[qArr.index(usedKeyword)+2:])
       except:
         return
-      return queryData
-  
-
+      return queryList
   def getFromWiki(self, query):
     page = wikiAPI.page(query)
     pageData = page.summary
@@ -217,6 +217,15 @@ class Bot: # The main bot class
     if self.query not in opinions.opF.keys():
       opinions.opF[self.query] = random.randint(-2, 2)
     self.postResponse(phrases.featureOps[opinions.opF[self.query]], self.query)
+
+  
+  def queryOpinionVerb(self):
+    # this code is pretty mank
+    if self.query[0] not in opinions.opF.keys():
+      opinions.opF[self.query[0]] = {}
+    if self.query[self.query[0]][self.query[1]] not in opinions.opF[self.query[0]].keys():
+      self.query[self.query[0]][self.query[1]] = random.randint(-2, 2)
+    self.postResponse(phrases.verbOps[opinions.opV[self.query[0]][self.query[1]]], ' '.join(*self.query[0], *self.query[1]))
 
   
   def queryIdentity(self):
