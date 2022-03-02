@@ -1,5 +1,5 @@
 
-**Daniel Porter Bot - Documentation and Commentary v1.0**
+**Daniel Porter Bot Information v1.0**
 
 **By Alex Badman and Rowan Marshall**
 

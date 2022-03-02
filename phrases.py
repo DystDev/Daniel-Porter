@@ -8,23 +8,13 @@ unknownPreQuestion = ['On the other hand...', 'Let me ask you something.', 'I\'v
 
 
 # Adjective response set phrases
-negativeOpAdj = ['No, of course I\'m not CONTENT!', 'I\'m not CONTENT....', 'Umm? No - I\'m not CONTENT']
-
-noOpAdj = ['No, I\'m not CONTENT', 'Unfortunately, I\'m not CONTENT', 'Nope, not CONTENT']
-
-neutralOpAdj = ['I\'m not really sure if I\'m CONTENT or not.', 'I could be CONTENT, I haven\'t really thought about that though.', 'Umm, maybe? I could be CONTENT.']
-
-yesOpAdj = ['Yes, I\'m CONTENT', 'Fortunately, I am CONTENT', 'Yeah, I am CONTENT actually']
-
-positiveOpAdj = ['Yes, I\'m CONTENT! Thanks for asking', 'Thankfully, I\'m CONTENT!', 'Yeah, I really like being CONTENT!']
+adjOps = {
+  -2: ['No, of course I\'m not CONTENT!', 'I\'m not CONTENT....', 'Umm? No - I\'m not CONTENT'], 
+  -1: ['No, I\'m not CONTENT', 'Unfortunately, I\'m not CONTENT', 'Nope, not CONTENT'], 
+  0: ['I\'m not really sure if I\'m CONTENT or not.', 'I could be CONTENT, I haven\'t really thought about that though.', 'Umm, maybe? I could be CONTENT.'], 
+  1: ['Yes, I\'m CONTENT', 'Fortunately, I am CONTENT', 'Yeah, I am CONTENT actually'], 
+  2: ['Yes, I\'m CONTENT! Thanks for asking', 'Thankfully, I\'m CONTENT!', 'Yeah, I really like being CONTENT!']}
 
 # Verb response set phrases
-negativeOpVerb = ["No, I hate to CONTENT, what are you on about"]
 
-noOpVerb = ["No, I don't CONTENT much"]
-
-neutralOpVerb = ["Uh, I'm not really sure if I CONTENT"]
-
-yesOpVerb = ["Yeah, I CONTENT a bit"]
-
-positiveOpVerb = ["Yeah, I like to CONTENT, its pretty fun"]
+verbOps =  {-2: ["No, I hate to CONTENT, what are you on about"], -1: ["No, I don't CONTENT much"], 0: ["Uh, I'm not really sure if I CONTENT"], 1: ["Yeah, I CONTENT a bit"], 2: ["Yeah, I like to CONTENT, its pretty fun"]}
