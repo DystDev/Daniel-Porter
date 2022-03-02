@@ -136,7 +136,7 @@ class Bot: # The main bot class
     
     if self.queryType == qTypes.OPINIONVERB:
       if self.query == '':
-        self.query = self.optainQuery(-2, 1)
+        self.query = self.obtainQuery(-2, 1)
       if self.query == None:
         self.error()
         return
@@ -220,12 +220,14 @@ class Bot: # The main bot class
 
   
   def queryOpinionVerb(self):
-    # this code is pretty mank
-    if self.query[0] not in opinions.opF.keys():
-      opinions.opF[self.query[0]] = {}
-    if self.query[self.query[0]][self.query[1]] not in opinions.opF[self.query[0]].keys():
-      self.query[self.query[0]][self.query[1]] = random.randint(-2, 2)
-    self.postResponse(phrases.verbOps[opinions.opV[self.query[0]][self.query[1]]], ' '.join(*self.query[0], *self.query[1]))
+    verb = self.query[0]
+    subject = ' '.join(self.query[1])
+    if verb not in opinions.opV.keys():
+      opinions.opV[verb] = {}
+    verbSubjects = opinions.opV[verb]
+    if subject not in verbSubjects.keys():
+      opinions.opV[verb][subject] = random.randint(-2, 2)
+    self.postResponse(phrases.verbOps[opinions.opV[verb][subject]], verb + ' ' + subject)
 
   
   def queryIdentity(self):
