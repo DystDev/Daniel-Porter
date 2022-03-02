@@ -77,7 +77,7 @@ In this block of code we import necessary **modules** for our program. These inc
 * **random - **to add random phrase picking to make the bot more natural (see **naturalSpeechComposer**)
 * **enum **- to add our custom query types, as seen here:
 
-    ```
+```
 # Query types enum
 class qTypes(Enum):
   IDENTITY = 'IDENTITY'
