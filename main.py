@@ -24,7 +24,7 @@ import helpers
 punctuation = ["?", ".", ","]
 queryIdentity = ['you', 'your']
 queryOpinionVerb = ['do you']
-queryOpinionFeature = ['are you a', 'are you', 'are you the']
+queryOpinionFeature = ['are you', 'are you a', 'are you the']
 queryWiki = ['who is', 'whos', "who's", 'what is a', 'what is an',
              'search up', 'define', 'what is the meaning of', 'who are']
 
@@ -37,7 +37,15 @@ class qTypes(Enum):
     OPINIONFEATURE = 'OPINIONFEATURE'
     WIKI = 'WIKI'
 
+# Query Types datanu/offset dictionary
 
+
+qTypeFetchData = {
+    qTypes.IDENTITY: [1, 1],
+    qTypes.OPINIONVERB: [-2, 1],
+    qTypes.OPINIONFEATURE: [-1, 1],
+    qTypes.WIKI: [-1, 1]
+}
 # API Calls
 dictEndpoint = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
 
@@ -70,9 +78,10 @@ class Bot:  # The main bot class
     # PARAMS: Prompt: Used for the prompt used for the input.
     def getQueryType(self):
         self.findSignifierFromArray(queryWiki, qTypes.WIKI)
-        self.findSignifierFromArray(queryOpinionVerb, qTypes.OPINIONVERB)
         self.findSignifierFromArray(queryOpinionFeature, qTypes.OPINIONFEATURE)
         self.findSignifierFromArray(queryIdentity, qTypes.IDENTITY)
+        self.findSignifierFromArray(queryOpinionVerb, qTypes.OPINIONVERB)
+
         # If the bot cannot find something to talk about, sends a random
         # misunderstand message and TODO poses question to user
         last = self.usrMsgFormat[len(self.usrMsgFormat) - 1]
@@ -101,12 +110,20 @@ class Bot:  # The main bot class
         return ans.lower().split(' ')
 
     def composeResponse(self):
-        if self.queryType == qTypes.WIKI:
-            if self.query == '':
-                self.query = self.obtainQuery(-1, 1)
-            if self.query == None:
-                helpers.error()
-                return
+        print('Starting..., query type is', self.queryType)
+        if self.queryType == None:  # If the bot has no idea what you mean :(
+            helpers.error()
+            return
+        dataNumberRequired = qTypeFetchData[self.queryType][0]
+        offset = qTypeFetchData[self.queryType][1]
+
+        if self.query == '':
+            self.query = self.obtainQuery(dataNumberRequired, offset)
+        if self.query == None:
+            helpers.error()
+            return
+
+        elif self.queryType == qTypes.WIKI:
             queryGotten = fetchWikipedia.getFromWiki(self.query)
             if queryGotten == None:
                 print(helpers.naturalSpeechComposer(
@@ -115,29 +132,18 @@ class Bot:  # The main bot class
                 print(helpers.naturalSpeechComposer(
                     phrases.wikiTemplates, queryGotten))
 
-        if self.queryType == qTypes.IDENTITY:
-            # print('identiyy question')
-            if self.query == '':
-                self.query = self.obtainQuery(1, 1)
-            if self.query == None or self.query not in iden.topics:  # If the feature requested not in identity
-                helpers.error()
+        elif self.queryType == qTypes.IDENTITY:
+            if self.query not in iden.topics:  # If the feature requested not in identity
+                print('WOAH! Overriding...')
+                self.queryType = qTypes.OPINIONFEATURE
+                self.composeResponse()
                 return
             self.queryIdentity()
 
-        if self.queryType == qTypes.OPINIONFEATURE:
-            if self.query == '':
-                self.query = self.obtainQuery(-1, 1)
-            if self.query == None:
-                helpers.error()
-                return
+        elif self.queryType == qTypes.OPINIONFEATURE:
             self.queryOpinionFeature()
 
-        if self.queryType == qTypes.OPINIONVERB:
-            if self.query == '':
-                self.query = self.obtainQuery(-2, 1)
-            if self.query == None:
-                helpers.error()
-                return
+        elif self.queryType == qTypes.OPINIONVERB:
             self.queryOpinionVerb()
 
     def findSignifierFromArray(self, arrayOfSignifier, targetQueryType):
@@ -198,8 +204,10 @@ class Bot:  # The main bot class
         verbSubjects = opinions.opV[verb]
         if subject not in verbSubjects.keys():
             opinions.opV[verb][subject] = random.randint(-2, 2)
+        insert = verb + ' ' + subject
+        insert.replace('to like', '')
         self.postResponse(
-            phrases.verbOps[opinions.opV[verb][subject]], verb + ' ' + subject)
+            phrases.verbOps[opinions.opV[verb][subject]], insert)
 
     def queryIdentity(self):
         for tuple in iden.iden:
