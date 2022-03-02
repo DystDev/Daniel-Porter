@@ -4,7 +4,7 @@
 # Alex Badman
 # ---------------------------------------------------------------
 
-# TODO:
+# TODO: fat mog
 # ',' in getFromWiki?
 # - roadmap : rework getquery
 # - roadmap : add opinionnoun and opinionverb
