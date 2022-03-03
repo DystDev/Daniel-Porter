@@ -85,7 +85,6 @@ class Bot:  # The main bot class
         self.findSignifierFromArray(queryOpinionFeature, qTypes.OPINIONFEATURE)
         self.findSignifierFromArray(queryIdentity, qTypes.IDENTITY)
         self.findSignifierFromArray(queryOpinionVerb, qTypes.OPINIONVERB)
-
         # If the bot cannot find something to talk about, sends a random
         # misunderstand message and TODO poses question to user
         last = self.usrMsgFormat[len(self.usrMsgFormat) - 1]
@@ -138,8 +137,8 @@ class Bot:  # The main bot class
 
         elif self.queryType == qTypes.IDENTITY:
             if self.query not in iden.topics:  # If the feature requested not in identity
-                print('WOAH! Overriding...')
-                self.queryType = qTypes.OPINIONFEATURE
+                self.findSignifierFromArray(
+                    queryOpinionFeature, qTypes.OPINIONFEATURE)
                 self.composeResponse()
                 return
             self.queryIdentity()
