@@ -3,7 +3,6 @@
 # Alex Badman
 # ---------------------------------------------------------------
 
-# TODO: fat mog
 # ',' in getFromWiki?
 # - Add questions posed if the bot cannot understand
 # - Add user info handling (i.e. can unshift name to start?)
@@ -52,7 +51,12 @@ dictEndpoint = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
 
 class Bot:  # The main bot class
     def __init__(self):  # Constructor
-        pass
+        self.lastKeyword = ''  # e.g. 'what is an'
+        self.usrMsg = ''  # e.g. 'what is an apple'
+        self.usrMsgFormat = ''  # e.g. ['what', 'is', 'an', 'apple']
+        self.queryType = None  # e.g qTypes.WEB
+        self.query = ''  # e.g. apple
+        self.isNewQuestion = True  # e.g. wtf
 
     # Main method. Goes through steps of handling conversation.
     # PARAMS: N/A
@@ -69,7 +73,7 @@ class Bot:  # The main bot class
         ans = input(prompt)
         if self.isNewQuestion == True:
             self.reset()
-            self.isNewQuestion == False
+            self.isNewQuestion = False
         if self.usrMsg == '' and self.usrMsgFormat == '':
             self.usrMsg = self.formatAnswer(ans)
             self.usrMsgFormat = self.formatAnswerArray(ans)
@@ -161,14 +165,14 @@ class Bot:  # The main bot class
         if dataNumberRequired == 1:
             try:
                 query = qArr[qArr.index(usedKeyword) + offset]
-            except:
+            except (ReferenceError):
                 return
             return query
         elif dataNumberRequired == -1:
             try:
                 queryList = qArr[qArr.index(usedKeyword)+1:]
                 query = " ".join(queryList)
-            except:
+            except (ReferenceError):
                 return
             return query
         elif dataNumberRequired == -2:  # For verb phrase
@@ -176,7 +180,7 @@ class Bot:  # The main bot class
                 queryList = []
                 queryList.append(qArr[qArr.index(usedKeyword)+1])
                 queryList.append(qArr[qArr.index(usedKeyword)+2:])
-            except:
+            except (ReferenceError):
                 return
             return queryList
 
@@ -210,21 +214,21 @@ class Bot:  # The main bot class
             phrases.verbOps[opinions.opV[verb][subject]], insert)
 
     def queryIdentity(self):
-        for tuple in iden.iden:
-            for value in tuple:
+        for idenTuple in iden.iden:
+            for value in idenTuple:
                 if self.query == value:
-                    i = iden.iden[tuple]
+                    i = iden.iden[idenTuple]
                     responseTemplates = i['responses']
                     # Pretty disgusting way to see which are provided
                     try:
                         value = i['value']
-                    except:
+                    except (ReferenceError):
                         self.postResponse(responseTemplates)
                         return
                     try:
                         cb = i['callback']
                         cbRec = i['cbRecieved']
-                    except:
+                    except (ReferenceError):
                         self.postResponse(responseTemplates, value)
                         return
                     self.postResponse(responseTemplates, value, cb, cbRec)
