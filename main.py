@@ -24,12 +24,13 @@ punctuation = ["?", ".", ","]
 queryIdentity = ['you', 'your']
 queryOpinionVerb = ['do you']
 queryOpinionFeature = ['are you', 'are you a', 'are you the']
-queryWiki = ['who is', 'whos', "who's", 'what is a', 'what is an',
-             'search up', 'define', 'what is the meaning of', 'who are']
+queryWiki = ['who is', 'whos', "who's", 'what is a', 'what is an', 'search up', 'define', 'what is the meaning of', 'who are']
+
+# Exception overrides
+overrides = { 'what do you like to do':iden.iden[('like', 'hobbies', 'hobby')] }
+
 
 # Query types enum
-
-
 class qTypes(Enum):
     IDENTITY = 'IDENTITY'
     OPINIONVERB = 'OPINIONVERB'
