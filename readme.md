@@ -55,14 +55,13 @@ In this section we explore the line by line analysis of the Daniel porter Code. 
 
 ```
 # Imports
-import iden # Identity
-import phrases # Set phrases
-import opinions # Storing generated opinions of the bot
-import random # Add variation to the bot
-from enum import Enum # Custom query types
-import time # For waiting a bit -> more natural
-import wikipediaapi # An API for fetching wikipedia content
-import re # Regex for string manipulation
+import random  # Add variation to the bot
+from enum import Enum  # Custom query types
+import time  # For waiting a bit -> more natural
+from api import fetchWikipedia
+# from storedData import iden, opinions, phrases
+from storedData import iden, opinions, phrases
+import helpers
 ```
 
 In this block of code we import necessary **modules** for our program. These include other python files we created i.e. iden.py, phrases.py and opinions.py (both as seen above). We import modules for these reasons:

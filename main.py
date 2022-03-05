@@ -26,7 +26,6 @@ from api import fetchWikipedia
 from storedData import iden, opinions, phrases
 import helpers
 # Lists
-punctuation = ["?", ".", ","]
 queryIdentity = ['you', 'your']
 queryOpinionVerb = ['do you']
 queryOpinionFeature = ['are you']
@@ -43,10 +42,6 @@ class qTypes(Enum):
     WIKI = 'WIKI'
 
 
-# Exception overrides
-overrides = {'what do you like to do': [
-    iden.iden[('like', 'hobbies', 'hobby')], qTypes.IDENTITY]}
-
 # Query Types datanu/offset dictionary
 qTypeFetchData = {
     qTypes.IDENTITY: [1, 1],
@@ -56,6 +51,12 @@ qTypeFetchData = {
 }
 # API Calls
 dictEndpoint = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
+
+
+
+# # Exception overrides
+# overrides = {'what do you like to do': [
+#     iden.iden[('like', 'hobbies', 'hobby')], qTypes.IDENTITY]}
 
 
 class Bot:  # The main bot class
