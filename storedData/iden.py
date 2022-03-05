@@ -25,6 +25,10 @@ iden = {
         'responses': ['I am from CONTENT', 'I live in CONTENT'],
         'value': "OCR Land"
     },
+    ('born'): {
+        'responses': ['I was born in CONTENT', 'Not too long ago, only CONTENT'],
+        'value': "2007"
+    },
 }
 
 topics = [item for topicArr in iden.keys() for item in topicArr]

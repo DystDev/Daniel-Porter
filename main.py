@@ -22,24 +22,30 @@ import random  # Add variation to the bot
 from enum import Enum  # Custom query types
 import time  # For waiting a bit -> more natural
 from api import fetchWikipedia
-from storedData import iden, opinions, phrases # from storedData import iden, opinions, phrases
+# from storedData import iden, opinions, phrases
+from storedData import iden, opinions, phrases
 import helpers
 # Lists
 punctuation = ["?", ".", ","]
 queryIdentity = ['you', 'your']
 queryOpinionVerb = ['do you']
 queryOpinionFeature = ['are you']
-queryWiki = ['who is', 'whos', "who's", 'what is a', 'what is an', 'search up', 'define', 'who are', 'what is the']
+queryWiki = ['who is', 'whos', "who's", 'what is a',
+             'what is an', 'search up', 'define', 'who are', 'what is the']
 
 # Query types enum
+
+
 class qTypes(Enum):
     IDENTITY = 'IDENTITY'
     OPINIONVERB = 'OPINIONVERB'
     OPINIONFEATURE = 'OPINIONFEATURE'
     WIKI = 'WIKI'
 
+
 # Exception overrides
-overrides = { 'what do you like to do':[iden.iden[('like', 'hobbies', 'hobby')], qTypes.IDENTITY] }
+overrides = {'what do you like to do': [
+    iden.iden[('like', 'hobbies', 'hobby')], qTypes.IDENTITY]}
 
 # Query Types datanu/offset dictionary
 qTypeFetchData = {
@@ -67,7 +73,7 @@ class Bot:  # The main bot class
         self.askQuestion()
         hasResponse = self.getQueryType()
         if hasResponse:
-          self.composeResponse()
+            self.composeResponse()
 
     # Poses question to user (complicated way of calling input()). If question
     # is the first asked, resets the bots and sets the local fields
@@ -87,7 +93,7 @@ class Bot:  # The main bot class
     # PARAMS: Prompt: Used for the prompt used for the input.
     def getQueryType(self):
         if self.usrMsg in overrides.keys():
-          pass
+            pass
         self.findSignifierFromArray(queryWiki, qTypes.WIKI)
         self.findSignifierFromArray(queryOpinionFeature, qTypes.OPINIONFEATURE)
         self.findSignifierFromArray(queryIdentity, qTypes.IDENTITY)
@@ -125,7 +131,7 @@ class Bot:  # The main bot class
             return
         dataNumberRequired = qTypeFetchData[self.queryType][0]
         offset = qTypeFetchData[self.queryType][1]
-        
+
         if self.query == '':
             self.query = self.obtainQuery(dataNumberRequired, offset)
         if self.query == None:
@@ -133,14 +139,14 @@ class Bot:  # The main bot class
             return
 
         if self.queryType == qTypes.WIKI:
-            queryGotten = fetchWikipedia.getFromWiki(self.query) # The wiki page
+            queryGotten = fetchWikipedia.getFromWiki(
+                self.query)  # The wiki page
             if queryGotten == None:
                 print(helpers.naturalSpeechComposer(
                     phrases.unknownDictionaryTemplates, self.query))
             else:
                 print(helpers.naturalSpeechComposer(
                     phrases.wikiTemplates, queryGotten))
-      
 
         if self.queryType == qTypes.IDENTITY:
             if self.query not in iden.topics:  # If the feature requested not in identity
@@ -269,6 +275,6 @@ dan = Bot()  # Instance of the bot
 dan.reset()  # reset i.e. init most fields
 while True:
     try:
-      dan.handleConversation()
-    except:
-      helpers.error()
+        dan.handleConversation()
+    except Exception as e:
+        helpers.error()
