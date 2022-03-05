@@ -25,6 +25,8 @@ from api import fetchWikipedia
 # from storedData import iden, opinions, phrases
 from storedData import iden, opinions, phrases
 import helpers
+
+
 # Lists
 queryIdentity = ['you', 'your']
 queryOpinionVerb = ['do you']
@@ -93,8 +95,8 @@ class Bot:  # The main bot class
 
     # PARAMS: Prompt: Used for the prompt used for the input.
     def getQueryType(self):
-        if self.usrMsg in overrides.keys():
-            pass
+        # if self.usrMsg in overrides.keys():
+        #     pass
         self.findSignifierFromArray(queryWiki, qTypes.WIKI)
         self.findSignifierFromArray(queryOpinionFeature, qTypes.OPINIONFEATURE)
         self.findSignifierFromArray(queryIdentity, qTypes.IDENTITY)
