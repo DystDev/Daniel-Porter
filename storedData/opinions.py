@@ -5,4 +5,5 @@ opV = {'like':{
   'among us':-1
   
 }}
-opF = { 'fat':-2 }
+opF = { 'fat':-2,
+      'a robot':2}

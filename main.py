@@ -12,7 +12,7 @@ daniel porter bot.
 # - Add questions posed if the bot cannot understand
 # - Add user info handling (i.e. can unshift name to start?)
 # - Add 'question' question type
-# - The wiki finder sometimes returns a "may refer to", turn this into an error message
+# DONE - The wiki finder sometimes returns a "may refer to", turn this into an error message
 # DONE - roadmap : add opinionfeature
 # DONE - Fix iden.py formatting
 # DONE - Add questions to be posed to user
@@ -22,28 +22,26 @@ import random  # Add variation to the bot
 from enum import Enum  # Custom query types
 import time  # For waiting a bit -> more natural
 from api import fetchWikipedia
-from storedData import iden, opinions, phrases
+from storedData import iden, opinions, phrases # from storedData import iden, opinions, phrases
 import helpers
 # Lists
 punctuation = ["?", ".", ","]
 queryIdentity = ['you', 'your']
 queryOpinionVerb = ['do you']
-queryOpinionFeature = ['are you', 'are you a', 'are you the']
-queryWiki = ['who is', 'whos', "who's", 'what is a', 'what is an',
-             'search up', 'define', 'what is the meaning of', 'who are']
+queryOpinionFeature = ['are you']
+queryWiki = ['who is', 'whos', "who's", 'what is a', 'what is an', 'search up', 'define', 'who are', 'what is the']
 
 # Query types enum
-
-
 class qTypes(Enum):
     IDENTITY = 'IDENTITY'
     OPINIONVERB = 'OPINIONVERB'
     OPINIONFEATURE = 'OPINIONFEATURE'
     WIKI = 'WIKI'
 
+# Exception overrides
+overrides = { 'what do you like to do':[iden.iden[('like', 'hobbies', 'hobby')], qTypes.IDENTITY] }
+
 # Query Types datanu/offset dictionary
-
-
 qTypeFetchData = {
     qTypes.IDENTITY: [1, 1],
     qTypes.OPINIONVERB: [-2, 1],
@@ -67,8 +65,9 @@ class Bot:  # The main bot class
     # PARAMS: N/A
     def handleConversation(self):
         self.askQuestion()
-        self.getQueryType()
-        self.composeResponse()
+        hasResponse = self.getQueryType()
+        if hasResponse:
+          self.composeResponse()
 
     # Poses question to user (complicated way of calling input()). If question
     # is the first asked, resets the bots and sets the local fields
@@ -76,6 +75,7 @@ class Bot:  # The main bot class
     def askQuestion(self, prompt="What is your question? "):
         # Resets fields for each new question
         ans = input(prompt)
+        self.reset()
         if self.isNewQuestion == True:
             self.reset()
             self.isNewQuestion = False
@@ -86,6 +86,8 @@ class Bot:  # The main bot class
 
     # PARAMS: Prompt: Used for the prompt used for the input.
     def getQueryType(self):
+        if self.usrMsg in overrides.keys():
+          pass
         self.findSignifierFromArray(queryWiki, qTypes.WIKI)
         self.findSignifierFromArray(queryOpinionFeature, qTypes.OPINIONFEATURE)
         self.findSignifierFromArray(queryIdentity, qTypes.IDENTITY)
@@ -99,8 +101,8 @@ class Bot:  # The main bot class
             self.backupFindTopic()
         if self.queryType == None:
             helpers.error()
-            return
-        return
+            return False
+        return True
 
     # Prompts for answer question to user
 
@@ -118,40 +120,42 @@ class Bot:  # The main bot class
         return ans.lower().split(' ')
 
     def composeResponse(self):
-        print('Starting..., query type is', self.queryType)
         if self.queryType == None:  # If the bot has no idea what you mean :(
             helpers.error()
             return
         dataNumberRequired = qTypeFetchData[self.queryType][0]
         offset = qTypeFetchData[self.queryType][1]
-
+        
         if self.query == '':
             self.query = self.obtainQuery(dataNumberRequired, offset)
         if self.query == None:
             helpers.error()
             return
 
-        elif self.queryType == qTypes.WIKI:
-            queryGotten = fetchWikipedia.getFromWiki(self.query)
+        if self.queryType == qTypes.WIKI:
+            queryGotten = fetchWikipedia.getFromWiki(self.query) # The wiki page
             if queryGotten == None:
                 print(helpers.naturalSpeechComposer(
                     phrases.unknownDictionaryTemplates, self.query))
             else:
                 print(helpers.naturalSpeechComposer(
                     phrases.wikiTemplates, queryGotten))
+      
 
-        elif self.queryType == qTypes.IDENTITY:
+        if self.queryType == qTypes.IDENTITY:
             if self.query not in iden.topics:  # If the feature requested not in identity
                 self.findSignifierFromArray(
                     queryOpinionFeature, qTypes.OPINIONFEATURE)
+                self.queryType == qTypes.OPINIONFEATURE
+                self.query = self.obtainQuery(-1, 1)
                 self.composeResponse()
                 return
             self.queryIdentity()
 
-        elif self.queryType == qTypes.OPINIONFEATURE:
+        if self.queryType == qTypes.OPINIONFEATURE:
             self.queryOpinionFeature()
 
-        elif self.queryType == qTypes.OPINIONVERB:
+        if self.queryType == qTypes.OPINIONVERB:
             self.queryOpinionVerb()
 
     def findSignifierFromArray(self, arrayOfSignifier, targetQueryType):
@@ -226,13 +230,13 @@ class Bot:  # The main bot class
                     # Pretty disgusting way to see which are provided
                     try:
                         value = i['value']
-                    except (ReferenceError):
+                    except (KeyError):
                         self.postResponse(responseTemplates)
                         return
                     try:
                         cb = i['callback']
                         cbRec = i['cbRecieved']
-                    except (ReferenceError):
+                    except (KeyError):
                         self.postResponse(responseTemplates, value)
                         return
                     self.postResponse(responseTemplates, value, cb, cbRec)
@@ -260,7 +264,11 @@ class Bot:  # The main bot class
 
 
 # Main program
+print('Hi! I\'m Dan! I may be very self deprecating at times and my memory is abysmal :)')
 dan = Bot()  # Instance of the bot
 dan.reset()  # reset i.e. init most fields
 while True:
-    dan.handleConversation()
+    try:
+      dan.handleConversation()
+    except:
+      helpers.error()

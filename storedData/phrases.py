@@ -18,8 +18,8 @@ featureOps = {
 # Verb response set phrases
 
 verbOps =  {
-  -2: ["No, I hate to CONTENT, what are you on about??"], 
+  -2: ["No, I hate to CONTENT, what are you on about??", 'No no no, I never CONTENT - I really don\'t like it'], 
   -1: ["No, I don't CONTENT much"], 
   0: ["Uh, I'm not really sure if I CONTENT"], 
   1: ["Yeah, I CONTENT a bit"], 
-  2: ["Yeah, I like to CONTENT, its pretty fun"]}
+  2: ["Yeah, I CONTENT, its pretty fun"]}

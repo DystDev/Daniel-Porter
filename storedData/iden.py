@@ -10,7 +10,7 @@ iden = {
     ('how', 'feeling'): {
         'responses': ['I am feeling quite happy today', "Good, thanks", "Same as always, fine, fine"],
     },
-    ('hi', 'hello'): {
+    ('hi', 'hello', 'up'): {
         'responses': ['Hi there!', 'Heya!', 'Hi!'],
     },
     ('age', 'old'): {
@@ -20,7 +20,11 @@ iden = {
     ('like', 'hobbies', 'hobby'): {
         'responses': ['I like to CONTENT', 'In the weekends I ususally CONTENT'],
         'value': "ride bikes and do programming"
-    }
+    },
+    ('live', 'from', 'origin'): {
+        'responses': ['I am from CONTENT', 'I live in CONTENT'],
+        'value': "OCR Land"
+    },
 }
 
 topics = [item for topicArr in iden.keys() for item in topicArr]

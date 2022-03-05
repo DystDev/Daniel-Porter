@@ -94,8 +94,7 @@ queryWiki = ['who is', 'whos', "who's", 'what is a', 'what is an', 'search up', 
 class qTypes(Enum):
   IDENTITY = 'IDENTITY'
   OPINIONVERB = 'OPINIONVERB'
-  OPINIONADJ = 'OPINIONADJ'
-  OPINIONNOUN = 'OPINIONNOUN'
+  OPINIONFEATURE = 'OPINIONFEATURE'
   WIKI = 'WIKI'
 
 
