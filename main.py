@@ -1,3 +1,8 @@
+"""
+daniel porter bot.
+"""
+
+
 # List who is in the group or if you are working alone.
 # Rowan Marshall
 # Alex Badman
