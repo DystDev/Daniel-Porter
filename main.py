@@ -155,7 +155,6 @@ class Bot:  # The main bot class
             if self.query not in iden.topics:  # If the feature requested not in identity
                 self.findSignifierFromArray(
                     queryOpinionFeature, qTypes.OPINIONFEATURE)
-                self.queryType == qTypes.OPINIONFEATURE
                 self.query = self.obtainQuery(-1, 1)
                 self.composeResponse()
                 return

@@ -21,11 +21,11 @@ iden = {
         'responses': ['I like to CONTENT', 'In the weekends I ususally CONTENT'],
         'value': "ride bikes and do programming"
     },
-    ('live', 'from', 'origin'): {
+    ('live', 'from'): {
         'responses': ['I am from CONTENT', 'I live in CONTENT'],
         'value': "OCR Land"
     },
-    ('born'): {
+    ('born', 'origin'): {
         'responses': ['I was born in CONTENT', 'Not too long ago, only CONTENT'],
         'value': "2007"
     },
