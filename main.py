@@ -182,7 +182,7 @@ class Bot:  # The main bot class
             except (ReferenceError):
                 return
             return queryList
-
+# I am a sweaty little kodu pebble
     # More broad searching for topic, so may misunderstand and only works identity.
     # However, it will work more often to find the topic.
     def backupFindTopic(self):
