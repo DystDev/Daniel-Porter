@@ -55,14 +55,13 @@ In this section we explore the line by line analysis of the Daniel porter Code. 
 
 ```
 # Imports
-import iden # Identity
-import phrases # Set phrases
-import opinions # Storing generated opinions of the bot
-import random # Add variation to the bot
-from enum import Enum # Custom query types
-import time # For waiting a bit -> more natural
-import wikipediaapi # An API for fetching wikipedia content
-import re # Regex for string manipulation
+import random  # Add variation to the bot
+from enum import Enum  # Custom query types
+import time  # For waiting a bit -> more natural
+from api import fetchWikipedia
+# from storedData import iden, opinions, phrases
+from storedData import iden, opinions, phrases
+import helpers
 ```
 
 In this block of code we import necessary **modules** for our program. These include other python files we created i.e. iden.py, phrases.py and opinions.py (both as seen above). We import modules for these reasons:
@@ -87,21 +86,30 @@ class qTypes(Enum):
 ```
 # Lists
 queryIdentity = ['you', 'your']
-queryOpinion = ['do you']
-queryWiki = ['who is', 'whos', "who's", 'what is a', 'what is an', 'search up', 'define', 'what is the meaning of']
+queryOpinionVerb = ['do you']
+queryOpinionFeature = ['are you']
+queryWiki = ['who is', 'whos', "who's", 'what is a',
+             'what is an', 'search up', 'define', 'who are', 'what is the']
 
 # Query types enum
+
+
 class qTypes(Enum):
-  IDENTITY = 'IDENTITY'
-  OPINIONVERB = 'OPINIONVERB'
-  OPINIONADJ = 'OPINIONADJ'
-  OPINIONNOUN = 'OPINIONNOUN'
-  WIKI = 'WIKI'
+    IDENTITY = 'IDENTITY'
+    OPINIONVERB = 'OPINIONVERB'
+    OPINIONFEATURE = 'OPINIONFEATURE'
+    WIKI = 'WIKI'
 
 
+# Query Types datanu/offset dictionary
+qTypeFetchData = {
+    qTypes.IDENTITY: [1, 1],
+    qTypes.OPINIONVERB: [-2, 1],
+    qTypes.OPINIONFEATURE: [-1, 1],
+    qTypes.WIKI: [-1, 1]
+}
 # API Calls
 dictEndpoint = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
-wikiAPI = wikipediaapi.Wikipedia('en')
 ```
 
 In this section the necessary **global variables** are initiated for use by the bot, including lists, api endpoints and the qTypes enum. Query types are split into the following:
@@ -111,6 +119,7 @@ In this section the necessary **global variables** are initiated for use by the 
 - **OpinionAdj**; same as verbs, but for features of the bot that we did not hardcode **<span style="text-decoration:underline;">(e.g. ‘Are you young?’)</span>**
 - **OpinionNoun**; same as other opinions, but for comparing the bot to something else **<span style="text-decoration:underline;">(e.g. ‘Are you a waiter?’)</span>**
 - **Wiki**; we chose this type similar to a smart assistant e.g. Alexa. **The question is parsed then information is obtained from the internet**. We **considered using this method for any question that the bot did not understand** to reduce ‘I don’t understand sorry’ however the **bot would end up contradicting itself and sounding unnatural**, so we kept the old error method. **<span style="text-decoration:underline;">(e.g. ‘Who is Donald Trump’)</span>**
+- **qTypeFetchData**; this is used to store data of **finding the query required in relation to the keyword**, which depends on the question type, e.g. **'Are you a robot?'**, uses -1 to depict requesting all the input after the keyword **('you')**, returning 'a robot'
 
 **<span style="text-decoration:underline;">iii. obtainQuery</span>**
 
